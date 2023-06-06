@@ -1,30 +1,30 @@
-const { Writer } = require("../models/Writer")
-
+const { Book } = require('../models/Book.js');
+const { Writer } = require('../models/Writer.js');
+// const {Country} = require('../models/Country.js')
 
 const writerController = {
     getAll: (req, res) => {
 
-        let limitProduct = req.query.limit;
-
         Writer.find()
-            .limit(limitProduct)
             .populate("country")
             .then(data => {
-                res.json(data)
+                res.json(data);
             })
             .catch(err => {
                 res.status(500).json(err)
             })
+
     },
     getById: (req, res) => {
-        let id = req.params.id
 
-        Writer.findById(id).populate("country")
+        let id = req.params.id;
+
+        Writer.findById(id)
             .then(data => {
                 if (data)
-                    res.json(data)
+                    res.json(data);
                 else
-                    res.status(404).json({});
+                    res.status(404).json({ 'msg': 'Not found!' })
             })
             .catch(err => {
                 res.status(500).json(err)
@@ -35,25 +35,27 @@ const writerController = {
         let writer = new Writer({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            country: req.body.country
+            birthDate: req.body.birthDate,
+            country: req.body.country,
+            addDate: req.body.addDate,
         })
 
-        writer.save()
+        writer.save();
 
-        res.json(writer)
+        res.json(writer);
     },
-   
-    delete: (req, res) => {
-        let id = req.params.id;
+    deleteById: (req, res) => {
 
+        let id = req.params.id;
+        
         Writer.findByIdAndDelete(id)
             .then(data => {
-                res.json(data);
+                res.json(data)
             })
             .catch(err => {
                 res.status(500).json(err)
             })
-    }
+    },
 }
 
 

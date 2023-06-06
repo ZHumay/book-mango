@@ -1,27 +1,26 @@
 const express = require('express');
-const { countryRoutes } = require('./routes/countryRoutes');
-const { writerRoutes } = require('./routes/writerRoutes');
 const { bookRoutes } = require('./routes/bookRoutes');
-const cors = require("cors");
+const { writerRoutes } = require('./routes/writerRoutes');
+const { countryRoutes } = require('./routes/countryRoutes');
+const { default: mongoose } = require("mongoose");
 const { db } = require('./config/db');
-const app = express();
+
+const cors = require('cors')
 require('dotenv').config()
 
 db.connect();
 
+const app = express();
+
 app.use(express.json())
-// app.use(fileUpload());
 
-
-app.use('/api/country', countryRoutes)
-
-app.use('/api/writer', writerRoutes)
-app.use('/api/book', bookRoutes)
 app.use(cors());
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3006');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     next();
-//   });
-app.listen(3003);
+app.use('/api/books', bookRoutes)
+
+app.use('/api/writers', writerRoutes)
+
+app.use('/api/countries', countryRoutes)
+
+app.listen(3004,() =>console.log("Server connected"));
+
 

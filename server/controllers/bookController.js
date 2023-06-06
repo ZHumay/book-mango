@@ -1,22 +1,26 @@
-const { Book } = require("../models/Book")
+const { Book } = require('../models/Book.js');
 
 
 const bookController = {
     getAll: (req, res) => {
-
-        let limitProduct = req.query.limit;
-
+         let limitbook = req.query.limit;
         Book.find()
-            .limit(limitProduct)
-            .populate("writer")
-            .then(data => {
+        .limit(limitbook)
+        .populate({
+            path: "writer",
+            populate: {
+              path: "country",
+            },
+          })
+        .then(data => {
                 res.json(data)
             })
-            .catch(err => {
+         .catch(err => {
                 res.status(500).json(err)
             })
     },
     getById: (req, res) => {
+
         let id = req.params.id
 
         Book.findById(id).populate("writer")
@@ -31,19 +35,20 @@ const bookController = {
             })
     },
     add: (req, res) => {
-    
+
         let book = new Book({
             name: req.body.name,
             description: req.body.description,
+            publishDate: req.body.publishDate,
             writer: req.body.writer,
+            addDate: req.body.addDate,
         })
-
         book.save()
-
         res.json(book)
     },
-   
+ 
     delete: (req, res) => {
+        
         let id = req.params.id;
 
         Book.findByIdAndDelete(id)
@@ -60,18 +65,3 @@ const bookController = {
 module.exports = {
     bookController
 }
-
-
-
-// {
-//     "name":"Algoritmika",
-//     "description":"Proqramlasdirma",
-//     "writer":{
-//         "firstname":"Humay",
-//         "lastname":"Zahmati",
-//         "birthdayDate":"01-06-2002",
-//         "country":{
-//             "name":"Azerbaijan"
-//         }
-//     }
-// }

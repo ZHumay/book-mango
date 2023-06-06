@@ -1,9 +1,10 @@
-const { Country } = require("../models/Country");
+const { Writer } = require('../models/Writer.js');
+const { Country } = require('../models/Country.js');
 
 
 const countryController = {
     getAll: (req, res) => {
-
+        
         Country.find()
             .then(data => {
                 res.json(data);
@@ -14,6 +15,7 @@ const countryController = {
 
     },
     getById: (req, res) => {
+
         let id = req.params.id;
 
         Country.findById(id)
@@ -30,6 +32,7 @@ const countryController = {
     add: (req, res) => {
         let country = new Country({
             name: req.body.name,
+            
         })
 
         country.save();
@@ -39,7 +42,7 @@ const countryController = {
     deleteById: (req, res) => {
 
         let id = req.params.id;
-
+        
         Country.findByIdAndDelete(id)
             .then(data => {
                 res.json(data)
@@ -47,24 +50,7 @@ const countryController = {
             .catch(err => {
                 res.status(500).json(err)
             })
-
-
     },
-    update: (req, res) => {
-        let id = req.params.id;
-
-        Country.findById(id)
-            .then(data => {
-                data.name = req.body.name;
-                data.save();
-
-                res.json(data);
-            })
-            .catch(err => {
-                res.status(500).json(err);
-            })
-
-    }
 }
 
 
